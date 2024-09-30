@@ -9,6 +9,7 @@ import {
 import React from 'react';
 import styles from '../../styles';
 import {ViewPassIcon, HidePassIcon} from '../../asstes/icons/index';
+import auth from '@react-native-firebase/auth';
 
 export default function Login({
   inputValues,
@@ -19,6 +20,14 @@ export default function Login({
   handleChangeInput,
   isDisabledLoginButton,
 }) {
+  const onLogin = async (email, password) => {
+    try {
+      const result = await auth().signInWithEmailAndPassword(email, password);
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.formContainer}>
@@ -35,6 +44,7 @@ export default function Login({
           />
         </View>
         {inputValues.errorEmail && <Text>{inputValues.errorEmail}</Text>}
+
         <View style={styles.inputContainer}>
           <TextInput
             placeholder={'Password'}
@@ -58,6 +68,9 @@ export default function Login({
         {inputValues.errorPassword && <Text>{inputValues.errorPassword}</Text>}
 
         <TouchableOpacity
+          onPress={() => {
+            onLogin(inputValues.email, inputValues.password);
+          }}
           style={[
             styles.loginBtnContainer,
             isDisabledLoginButton && {opacity: 0.5},

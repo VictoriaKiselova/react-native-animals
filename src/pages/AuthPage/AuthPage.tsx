@@ -38,7 +38,7 @@ export default function AuthPage() {
     setInputValues(prevState => ({...prevState, [key]: value}));
   };
 
-  const checkEmail = email => {
+  const checkEmail = (email: string) => {
     const emailValidator = new RegExp(
       '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
     );
@@ -49,7 +49,7 @@ export default function AuthPage() {
     }
   };
 
-  const checkPassword = text => {
+  const checkPassword = (text: string) => {
     if (text.length < 8) {
       handleChangeInput(
         'errorPassword',
@@ -83,7 +83,6 @@ export default function AuthPage() {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[
-                styles.activeTab,
                 activeTab === 'login' ? styles.activeTab : styles.disabledTab,
               ]}
               onPress={() => setActiveTab('login')}>
@@ -100,7 +99,7 @@ export default function AuthPage() {
               <Text style={styles.authText}>Реєстрація</Text>
             </TouchableOpacity>
           </View>
-
+          {/* <RootNavigation/>  */}
           {activeTab === 'login' ? (
             <Login
               inputValues={inputValues}

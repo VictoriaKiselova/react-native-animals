@@ -1,18 +1,42 @@
 import {Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {ViewPassIcon, HidePassIcon} from '../../asstes/icons/index';
-import {Formik} from 'formik';
+import {Formik, FormikHelpers, FormikValues} from 'formik';
 import * as Yup from 'yup';
 import authShema from '../../pages/AuthPage/utils/validations';
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app';
 import styles from '../../styles';
 
 export default function Registration({isPassHidden, setIsPassHidden}) {
+  const registrateUser = async (
+    email: string,
+    password: string,
+    formikHelpers: FormikHelpers<FormikValues>,
+  ) => {
+    try {
+      const result = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+    } catch (e) {
+      if (e.code === 'auth/email-already-in-use') {
+        formikHelpers.setErrors({email: 'email-already-in-use'});
+      }
+    }
+  };
+
+  //вихід із системи.
+  // auth()
+  //   .signOut()
+  //   .then(() => console.log('User signed out!'));
+
   return (
     <View style={styles.formContainer}>
       <Formik
         initialValues={{email: '', password: '', confirmPassword: ''}}
         validationSchema={authShema}
-        onSubmit={values => {
-          console.log(values);
+        onSubmit={(value, formikHelpers) => {
+          void registrateUser(value.email, value.password, formikHelpers);
         }}>
         {({
           handleChange,
